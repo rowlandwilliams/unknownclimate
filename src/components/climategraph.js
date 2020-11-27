@@ -11,9 +11,12 @@ class ClimateGraph extends Component {
     
     componentDidMount() {
         this.build();
+        window.addEventListener('resize', this.build);
     }
 
     build = () => {
+        d3.select('.svg').remove();
+        
         const width = window.innerWidth * 0.7;
         const height = window.innerHeight;
 
@@ -39,6 +42,7 @@ class ClimateGraph extends Component {
 
         const svg = d3.select(this.myRef.current)
                         .append('svg')
+                        .attr('class', 'svg')
                         .attr('width', width)
                         .attr('height', height)
     
