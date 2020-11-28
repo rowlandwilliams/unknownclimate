@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../App.css";
 import * as d3 from "d3";
+import D3Voronoi from 'd3-voronoi';
 import ClimateData from './data/data'
 
 class ClimateGraph extends Component {
@@ -17,15 +18,18 @@ class ClimateGraph extends Component {
     build = () => {
         d3.select('.svg').remove();
         
-        const width = window.innerWidth * 0.7;
+        var width = window.innerWidth * 0.7;
         const height = window.innerHeight;
-
+        if (width > 500) { width = 500 } // set max width
+        else if (width < 500) { width = window.innerWidth * 0.9 } // fill page on smaller screen
+        
+        
         let lx0 = d3.scaleTime() // define x axis
             .domain([new Date(2020, 0, 1), new Date(2020, 11, 31)])
             .range([50, width - 50])
 
         let ly0 = d3.scaleLinear()
-            .domain([314, 420])
+            .domain([334, 420])
             .range([height - 50, 50]);
 
         let lXAxis = g => g
@@ -40,11 +44,16 @@ class ClimateGraph extends Component {
             .x(d => lx0(Date.parse(d.date))) 
             .y(d => ly0(d.ppm))
 
+        // var voronoi = D3Voronoi()
+        //     .x(function(d) { return lx0(Date.parse(d.date)) })
+        //     .y(function(d) { return ly0(d.ppm) })
+        //     .extent([[-50, -50], [width + 50, lHeight + 50]]) 
+
         const svg = d3.select(this.myRef.current)
                         .append('svg')
                         .attr('class', 'svg')
-                        .attr('width', width)
-                        .attr('height', height)
+                        .attr('width', width + 50)
+                        .attr('height', height + 50)
     
         svg.append('g')
                 .call(lXAxis)
